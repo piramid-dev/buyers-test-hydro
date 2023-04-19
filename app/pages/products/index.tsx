@@ -18,6 +18,7 @@ import { PRODUCT_CARD_FRAGMENT } from '~/data/fragments'
 import { getImageLoadingPriority } from '~/lib/const'
 import { seoPayload } from '~/lib/seo.server'
 import { routeHeaders, CACHE_SHORT } from '~/data/cache'
+import { useTranslation } from 'react-i18next'
 
 const PAGE_BY = 8
 
@@ -73,10 +74,11 @@ export async function loader({ request, context: { storefront } }: LoaderArgs) {
 
 export default function AllProducts() {
 	const { products } = useLoaderData<typeof loader>()
+	let { t } = useTranslation()
 
 	return (
 		<>
-			<PageHeader heading="All Products" variant="allCollections" />
+			<PageHeader heading={t('AllProducts')} variant="allCollections" />
 			<Section>
 				<Pagination connection={products}>
 					{({

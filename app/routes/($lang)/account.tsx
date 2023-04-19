@@ -92,7 +92,7 @@ export default function Authenticated() {
 	const outlet = useOutlet()
 	const matches = useMatches()
 
-	console.log(data)
+	// console.log(data)
 
 	// routes that export handle { renderInModal: true }
 	const renderOutletInModal = matches.some(match => {

@@ -36,6 +36,7 @@ export function Layout({
 	children: React.ReactNode
 	layout: LayoutData
 }) {
+	const params = useParams()
 	return (
 		<>
 			<div className="flex flex-col min-h-screen">
@@ -49,6 +50,7 @@ export function Layout({
 					menu={layout?.headerMenu}
 				/>
 				<main role="main" id="mainContent" className="flex-grow">
+					{params.lang}
 					{children}
 				</main>
 			</div>
