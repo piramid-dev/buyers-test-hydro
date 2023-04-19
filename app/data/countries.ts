@@ -115,6 +115,18 @@ export const countries: Localizations = {
 		country: 'IT',
 		currency: 'EUR'
 	},
+	'/it': {
+		label: 'Italy (EUR €)',
+		language: 'IT',
+		country: 'IT',
+		currency: 'EUR'
+	},
+	'/it-it': {
+		label: 'Italy (EUR €)',
+		language: 'IT',
+		country: 'IT',
+		currency: 'EUR'
+	},
 	'/en-jp': {
 		label: 'Japan (JPY ¥)',
 		language: 'EN',
