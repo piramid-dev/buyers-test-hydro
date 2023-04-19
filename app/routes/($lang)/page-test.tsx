@@ -44,8 +44,8 @@ export async function loader({ request, context, params }: LoaderArgs) {
 		}
 	})
 
-	console.log('--- status', response.statusText)
-	console.log('--- response', response)
+	// console.log('--- status', response.statusText)
+	// console.log('--- response', response)
 
 	if (!isAuthenticated) {
 		return json({ isAuthenticated: false }) as any
@@ -62,7 +62,10 @@ export async function loader({ request, context, params }: LoaderArgs) {
 
 		return json({
 			isAuthenticated: true,
-			reviews: allReviews
+			reviews: allReviews,
+			customer,
+			country: context.storefront.i18n.country,
+			language: context.storefront.i18n.language
 		}) as any
 	}
 }
@@ -70,6 +73,8 @@ export async function loader({ request, context, params }: LoaderArgs) {
 const PageTest = () => {
 	const data = useLoaderData<typeof loader>()
 	const { isAuthenticated, reviews } = data
+
+	console.log(data)
 
 	return (
 		<div>
