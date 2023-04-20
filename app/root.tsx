@@ -1,4 +1,11 @@
 import {
+	defer,
+	type LinksFunction,
+	type MetaFunction,
+	type LoaderArgs,
+	type AppLoadContext
+} from '@shopify/remix-oxygen'
+import {
 	Links,
 	Meta,
 	Outlet,
@@ -8,41 +15,19 @@ import {
 	useLoaderData,
 	useMatches
 } from '@remix-run/react'
-import { Seo, ShopifySalesChannel } from '@shopify/hydrogen'
-import { Cart, Shop } from '@shopify/hydrogen/storefront-api-types'
-import {
-	defer,
-	type AppLoadContext,
-	type LinksFunction,
-	type LoaderArgs,
-	type MetaFunction,
-	json
-} from '@shopify/remix-oxygen'
-import invariant from 'tiny-invariant'
+import { ShopifySalesChannel, Seo } from '@shopify/hydrogen'
 import { Layout } from '~/components'
-import { seoPayload } from '~/lib/seo.server'
-import favicon from '../public/favicon.svg'
 import { GenericError } from './components/GenericError'
 import { NotFound } from './components/NotFound'
-import { useAnalytics } from './hooks/useAnalytics'
-import { DEFAULT_LOCALE, parseMenu, type EnhancedMenu } from './lib/utils'
 import styles from './styles/app.css'
-import { useChangeLanguage } from 'remix-i18next'
+import favicon from '../public/favicon.svg'
+import { seoPayload } from '~/lib/seo.server'
+import { DEFAULT_LOCALE, parseMenu, type EnhancedMenu } from './lib/utils'
+import invariant from 'tiny-invariant'
+import { Shop, Cart } from '@shopify/hydrogen/storefront-api-types'
+import { useAnalytics } from './hooks/useAnalytics'
 import { useTranslation } from 'react-i18next'
-import i18next from '~/i18next.server'
-
-// import enTranslations from './localization/routes/en.json'
-// import itTranslations from './localization/routes/it.json'
-
-// i18next
-
-export let handle = {
-	// In the handle export, we can add a i18n key with namespaces our route
-	// will need to load. This key can be a single string or an array of strings.
-	// TIP: In most cases, you should set this to your defaultNS from your i18n config
-	// or if you did not set one, set it to the i18next default namespace "translation"
-	i18n: 'common'
-}
+import { useChangeLanguage } from 'remix-i18next'
 
 export const links: LinksFunction = () => {
 	return [
@@ -71,9 +56,6 @@ export async function loader({ request, context }: LoaderArgs) {
 		getLayoutData(context)
 	])
 
-	let locale = await i18next.getLocale(request)
-	console.log('locale', locale)
-
 	const seo = seoPayload.root({ shop: layout.shop, url: request.url })
 
 	return defer({
@@ -85,26 +67,24 @@ export async function loader({ request, context }: LoaderArgs) {
 			shopifySalesChannel: ShopifySalesChannel.hydrogen,
 			shopId: layout.shop.id
 		},
-		seo,
-		locale: json({ locale })
+		seo
 	})
 }
 
-// export async function loader({ request }: LoaderArgs) {
-// 	let locale = await i18next.getLocale(request)
-// 	return json({ locale })
-// }
-
 export default function App() {
-	// Get the locale from the loader
-	// let { locale } = useLoaderData<typeof loader>()
-	const { i18n } = useTranslation()
-
 	const data = useLoaderData<typeof loader>()
 	const locale = data.selectedLocale ?? DEFAULT_LOCALE
 	const hasUserConsent = true
 
+	console.log('app locale', locale)
+
 	useAnalytics(hasUserConsent, locale)
+
+	let { i18n } = useTranslation()
+	// This hook will change the i18n instance language to the current locale
+	// detected by the loader, this way, when we do something to change the
+	// language, this locale will change and i18next will load the correct
+	// translation files
 	useChangeLanguage(locale.language)
 
 	return (

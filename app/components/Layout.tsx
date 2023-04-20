@@ -37,6 +37,8 @@ export function Layout({
 	layout: LayoutData
 }) {
 	const params = useParams()
+	console.log(params)
+
 	return (
 		<>
 			<div className="flex flex-col min-h-screen">
